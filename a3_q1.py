@@ -32,7 +32,6 @@ def make_queen_sat(N):
 			for num in board[row]:
 				#print(board[row])
 				if (currNum < num):
-					#clauses.append("%d %d 0\n" %(currNum, num))
 					clauses.append("%d %d 0\n" %(-currNum, -num))
 
 		#At least one var per row must be true
@@ -54,7 +53,6 @@ def make_queen_sat(N):
 
 			for num in range(currNum, lastNumInCol+1, N):
 				if (num != currNum):
-					#clauses.append("%d %d 0\n" %(currNum, num))
 					clauses.append("%d %d 0\n" %(-currNum, -num))
 		
 		#At least one var per column must be true
@@ -64,15 +62,35 @@ def make_queen_sat(N):
 		oneTrue += "0\n"
 		clauses.append(oneTrue)
 
-	#Upward Diagonal Constraints
+	#Upward Sloping Diagonal Constraints
 	for i in range(0, N*2):
 		diagonal = []
+		#Extracting the diagonal numbers line by lune
 		for j in range(0, i+1):
 			k = i - j
 			if (k < N and j < N):
 				diagonal.append(board[k][j])
 
-	print(diagonal)
+		#print(diagonal)
+		if (len(diagonal) > 1):
+			for i in range(0, len(diagonal)):
+				currNum = diagonal[i]
+				for j in range(i+1, len(diagonal)):
+					clauses.append("%d %d 0\n" %(-currNum, -diagonal[j]))
+
+	#Downward Sloping Diagonal Constraints
+	for i in range(-N, N):
+		diagonal = []
+		for j in range(0, N):
+			if ((j-i >= 0) and (j-i < N)):
+				diagonal.append(board[j][j-i])
+		
+		#print(diagonal)
+		if (len(diagonal) > 1):
+			for i in range(0, len(diagonal)):
+				currNum = diagonal[i]
+				for j in range(i+1, len(diagonal)):
+					clauses.append("%d %d 0\n" %(-currNum, -diagonal[j]))
 
 
 
@@ -91,4 +109,4 @@ def make_queen_sat(N):
 	print(sentence)
 
 
-make_queen_sat(3)
+make_queen_sat(4)
