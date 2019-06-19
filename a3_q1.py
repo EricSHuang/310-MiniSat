@@ -17,43 +17,68 @@ def make_queen_sat(N):
 		board.append(row)
 	#print(board)
 
-	#GENERATING THE CONSTRAINTS
+	#GENERATING CONSTRAINTS
 	clauses = []
-	
+
 	#Horizontal Constraints
 	for row in range(0, N):
-		lastNumOnRow = (row+1)*N
+		lastNumOnRow = board[row][N-1]
 		#print("lastNumRow: %d" %(lastNumOnRow))
 
 		for col in range(0, N):
-			currNum = row*N + col + 1
+			currNum = board[row][col]
 			#print(currNum)
-			for num in range(currNum+1, lastNumOnRow+1):
-				clauses.append("%d %d 0\n" %(currNum, num))
-				clauses.append("%d %d 0\n" %(-currNum, -num))
 
-	#Vertical Constraints
-	for col in range(0, N):
-		lastNumInCol = N*(N-1) + col + 1
-		print("lastNumCol: %d" %(lastNumInCol))
-
-		for row in range(0, N):
-			currNum = row*N + col +1
-			print(currNum)
-
-			for num in range(currNum, lastNumInCol+1, N):
-				#print("%d %d 0\n" %(currNum, num))
-				if (num != currNum):
-					clauses.append("%d %d 0\n" %(currNum, num))
+			for num in board[row]:
+				#print(board[row])
+				if (currNum < num):
+					#clauses.append("%d %d 0\n" %(currNum, num))
 					clauses.append("%d %d 0\n" %(-currNum, -num))
 
+		#At least one var per row must be true
+		oneTrue = ""
+		for num in board[row]:
+			oneTrue += "%d " %(num)
+		oneTrue += "0\n"
+		clauses.append(oneTrue)
+	
+	#Vertical Constraints
+	for col in range(0, N):
+		firstNumInCol = board[0][col]
+		lastNumInCol = board[N-1][col]
+		#print("lastNumCol: %d" %(lastNumInCol))
+
+		for row in range(0, N):
+			currNum = board[row][col]
+			#print(currNum)
+
+			for num in range(currNum, lastNumInCol+1, N):
+				if (num != currNum):
+					#clauses.append("%d %d 0\n" %(currNum, num))
+					clauses.append("%d %d 0\n" %(-currNum, -num))
+		
+		#At least one var per column must be true
+		oneTrue = ""
+		for num in range(firstNumInCol, lastNumInCol+1, N):
+			oneTrue += "%d " %(num)
+		oneTrue += "0\n"
+		clauses.append(oneTrue)
+
 	#Upward Diagonal Constraints
-	for num in range(0, N*N):
+	for i in range(0, N*2):
+		diagonal = []
+		for j in range(0, i+1):
+			k = i - j
+			if (k < N and j < N):
+				diagonal.append(board[k][j])
+
+	print(diagonal)
+
 
 
 	#WRITING THE SENTENCE
-	#Comment at start stating the problem description
-	sentence = "c N=%d queens\n" %(N)
+	#Comment stating the problem description
+	sentence = "c N=%d Queens\n" %(N)
 
 	#Problem Description Line
 	numVars = N * N
@@ -66,4 +91,4 @@ def make_queen_sat(N):
 	print(sentence)
 
 
-make_queen_sat(4)
+make_queen_sat(3)
