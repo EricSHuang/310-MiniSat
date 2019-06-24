@@ -2,7 +2,8 @@
 CMPT310: a3_q1.py
 Eric Huang
 """
-
+import math
+import os
 
 def make_queen_sat(N):
 	"""Generates a SAT sentence for the N-Queens problem that can be inputted into miniSAT."""
@@ -107,6 +108,52 @@ def make_queen_sat(N):
 		sentence = sentence + clauses[i]
 
 	print(sentence)
+	return sentence
 
 
+def draw_queen_sat_sol(sol):
+	sentence = sol.split()
+
+	if (sentence[0] == "UNSAT"):
+		print("No solution.")
+		return
+	else:
+		sentence.remove("SAT")
+		sentence.remove("0")	#Removes the terminating 0 at the end of sol
+		N = int(math.sqrt(len(sentence)))
+		print("N : %d" %(N))
+
+	if (len(sentence) > 41):
+		#"SAT" + N = 41 elements
+		print("Too Big: N must be less than 40")
+		return
+
+	else:
+		line = ""
+		for i in range(0, N):
+			line += "----"
+		print(line)	#Top of Board
+
+		#Board Contents
+		for row in range(0, N):
+			currRow = ""
+			for col in range(0, N):
+				num = row*N + col
+				if (int(sentence[num]) < 0):
+					currRow += "|   "
+				else: currRow += "| Q "
+			currRow += "|"
+			print(currRow)
+			print(line)
+		return
+
+
+#Testing
 make_queen_sat(4)
+#testSol = "SAT -1 -2 3 -4 5 -6 -7 -8 -9 -10 -11 12 -13 14 -15 -16 0"
+#draw_queen_sat_sol(testSol)
+
+
+"""Determines the max value for N that minisat can solve in 10seconds or less"""
+#TODO: FINISH THIS SECTION
+#os.system('minisat')
