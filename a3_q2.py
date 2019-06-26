@@ -17,7 +17,7 @@ def make_ice_breaker_sat(graph, k):
 		clause = ""
 		for i in range(0, k):
 			clause += "%d "%(literals[node*k + i])
-		clause += "\n"
+		clause += "0\n"
 		clauses.append(clause)
 
 
@@ -43,7 +43,7 @@ def make_ice_breaker_sat(graph, k):
 				for colour in range(0, k):
 					c1 = literals[node*k + colour]
 					c2 = literals[edge*k + colour]
-					clause = "%d %d 0\n" %(c1, c2)
+					clause = "%d %d 0\n" %(-c1, -c2)
 					clauses.append(clause)
 
 
