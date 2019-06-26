@@ -8,7 +8,7 @@ import os
 def make_queen_sat(N):
 	"""Generates a SAT sentence for the N-Queens problem that can be inputted into miniSAT."""
 
-	#GENERATING THE 'BOARD'
+	#-----GENERATING THE BOARD-----#
 	board = []
 	for i in range(0, N):
 		row = []
@@ -18,7 +18,7 @@ def make_queen_sat(N):
 		board.append(row)
 	#print(board)
 
-	#GENERATING CONSTRAINTS
+	#-----GENERATING CONSTRAINTS-----#
 	clauses = []
 
 	#Horizontal Constraints
@@ -41,7 +41,7 @@ def make_queen_sat(N):
 			oneTrue += "%d " %(num)
 		oneTrue += "0\n"
 		clauses.append(oneTrue)
-	
+
 	#Vertical Constraints
 	for col in range(0, N):
 		firstNumInCol = board[0][col]
@@ -55,7 +55,7 @@ def make_queen_sat(N):
 			for num in range(currNum, lastNumInCol+1, N):
 				if (num != currNum):
 					clauses.append("%d %d 0\n" %(-currNum, -num))
-		
+
 		#At least one var per column must be true
 		oneTrue = ""
 		for num in range(firstNumInCol, lastNumInCol+1, N):
@@ -85,7 +85,7 @@ def make_queen_sat(N):
 		for j in range(0, N):
 			if ((j-i >= 0) and (j-i < N)):
 				diagonal.append(board[j][j-i])
-		
+
 		#print(diagonal)
 		if (len(diagonal) > 1):
 			for i in range(0, len(diagonal)):
@@ -95,11 +95,11 @@ def make_queen_sat(N):
 
 
 
-	#WRITING THE SENTENCE
+	#-----WRITING THE SENTENCE-----#
 	#Comment stating the problem description
 	sentence = "c N=%d Queens\n" %(N)
 
-	#Problem Description Line
+	#Problem Description
 	numVars = N * N
 	sentence += "p cnf %d %d\n" %(numVars, len(clauses))
 
