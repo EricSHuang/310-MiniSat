@@ -108,7 +108,7 @@ def make_queen_sat(N):
 	for i in range(0, len(clauses)):
 		sentence = sentence + clauses[i]
 
-	print(sentence)
+	#print(sentence)
 	return sentence
 
 
@@ -160,6 +160,7 @@ def experiment():
 	"""Determines the max value for N that minisat can solve in 10seconds or less"""
 	solvableInTime = True
 	N = 0
+	runningTimes = []
 	while(solvableInTime):
 		queenSAT = make_queen_sat(N)
 		writeToFile(queenSAT, "queenSAT.txt")
@@ -169,12 +170,16 @@ def experiment():
 
 		if (elapsedTime > 10):
 			solvableInTime = False
-			print("MAX N: %d" %(N))
+			print(runningTimes)
+			#print("MAX N: %d" %(N))
 			return N
-		else: N += 1
+		else: 
+			runningTimes.append(elapsedTime)
+			N += 1
 
 
-experiment()
+maxN = experiment()
+print("MAX N: %d" %(maxN))
 """
 #Testing
 #make_queen_sat(4)

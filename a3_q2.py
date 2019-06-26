@@ -11,7 +11,7 @@ def make_ice_breaker_sat(graph, k):
 	#one literal for each (node, colour) pair
 	#k literals per node for a total of len(graph)*k literals
 	literals = range(1, k*len(graph)+1)
-	print(literals)
+	#print(literals)
 
 	#-----CONSTRAINTS-----#
 	#Each node must be assigned a colour
@@ -59,7 +59,7 @@ def make_ice_breaker_sat(graph, k):
 	for i in range(0, len(clauses)):
 		sentence += clauses[i]
 
-	print(sentence)
+	#print(sentence)
 	return sentence
 
 #See if it should be incorporated into find_min_teams() instead of being a helper function
@@ -80,7 +80,10 @@ def find_min_teams(graph):
 		os.system("minisat min_teams.txt out2")
 		file = open("out2", "r")
 
-		if (file.readline() == "UNSAT"):
+		stLine = file.readline()
+		#print("firstline: %s" %(stLine))
+
+		if ( stLine == "UNSAT\n"):
 			k += 1
 		else:
 			unsolved = False
@@ -89,9 +92,10 @@ def find_min_teams(graph):
 #TODO: Check this for correctness
 def experiment():
 	"""Prints out average solving time and average number of teams."""
-	N = 1000
+	N = 20
 	probability = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-	rounds = 10
+	#probability = [0.1]
+	rounds = 1		#set to 10 for best results
 
 	for p in probability:
 		averageMinTeams = 0.0
@@ -100,7 +104,7 @@ def experiment():
 			graph = a2_q1.rand_graph(N, p)
 			startTime = time.time()
 			minTeams = find_min_teams(graph)
-			sol = make_ice_breaker_sat(graph, minTeams)
+			#sol = make_ice_breaker_sat(graph, minTeams)
 			elapsedTime = time.time() - startTime
 
 			averageMinTeams += minTeams
@@ -111,12 +115,25 @@ def experiment():
 		print("Average Min Teams for %0.1f: %f" %(p, averageMinTeams/rounds))
 		print("Average Running Time for %0.1f: %f" %(p, averageRunningTime/rounds))
 
-"""
-graphs = []
-for probability in range(0.1, 0.9):
-	n = 1000
-	graphs.append(rand_graph(n, probability))
-"""
 
-g1 = {0: [1, 2], 1: [0], 2: [0], 3: []}
-make_ice_breaker_sat(g1, 3)
+#Testing make_ice_breaker_sat()
+#g1 = {0: [1, 2], 1: [0], 2: [0], 3: []}
+#make_ice_breaker_sat(g1, 3)
+
+k3 = {0: [1, 2], 1: [0, 2], 2: [0, 1]}
+k4 = {0: [1, 2, 3], 1: [0, 2, 3], 2: [0, 1, 3], 3: [0, 1, 2]}
+
+#k3unsat = make_ice_breaker_sat(k3, 2)
+#writeToFile(k3unsat, "k3unsat.txt")
+#os.system("minisat k3unsat.txt k3unsatOUT")
+
+#k3sat = make_ice_breaker_sat(k3, 3)
+#writeToFile(k3sat, "k3sat.txt")
+#os.system("minisat k3sat.txt k3satOUT")
+
+#Testing find_min_teams()
+#print("min teams for k3: %d" %(find_min_teams(k3)))
+#print("min teams for k4: %d" %(find_min_teams(k4)))
+
+
+experiment()

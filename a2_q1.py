@@ -2,8 +2,7 @@
 CMPT310: a2_q1.py
 Eric Huang
 """
-from csp import *
-
+import random
 
 def rand_graph(n, p):
     """Returns a new random graph with n nodes numbered 0 to n-1 where every pair of
