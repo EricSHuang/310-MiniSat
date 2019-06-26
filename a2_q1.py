@@ -5,9 +5,10 @@ Eric Huang
 from csp import *
 
 
-#Returns a new random graph with n nodes numbered 0 to n-1 where every pair of
-#nodes is connected with a probability p.
 def rand_graph(n, p):
+    """Returns a new random graph with n nodes numbered 0 to n-1 where every pair of
+    nodes is connected with a probability p."""
+    
     graph = {}
     #Add one-way friend connections randomly
     for i in range (0, n):

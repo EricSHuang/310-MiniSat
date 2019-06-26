@@ -1,5 +1,7 @@
 #TODO: figure out if i need this line later
-#import a2_q1	#for rand_graph()
+import a2_q1	#for rand_graph()
+import os
+import time
 
 def make_ice_breaker_sat(graph, k):
 	"""Returns a SAT sentence for the k-Graph Colouring problem that can be inputted into minisat.
@@ -59,6 +61,55 @@ def make_ice_breaker_sat(graph, k):
 
 	print(sentence)
 	return sentence
+
+#See if it should be incorporated into find_min_teams() instead of being a helper function
+def writeToFile(string, fileName):
+	"""Writes given string to file."""
+	file = open(fileName, "w")
+	file.write(string)
+	file.close()
+
+#TODO: Check this for correctness
+def find_min_teams(graph):
+	"""Uses minisat to find the exact min number of colours needed to colour the graph."""
+	k = 1
+	unsolved = True
+	while (unsolved):
+		sentence = make_ice_breaker_sat(graph, k)
+		writeToFile(sentence, "min_teams.txt")
+		os.system("minisat min_teams.txt out2")
+		file = open("out2", "r")
+
+		if (file.readline() == "UNSAT"):
+			k += 1
+		else:
+			unsolved = False
+			return k
+
+#TODO: Check this for correctness
+def experiment():
+	"""Prints out average solving time and average number of teams."""
+	N = 1000
+	probability = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+	rounds = 10
+
+	for p in probability:
+		averageMinTeams = 0.0
+		averageRunningTime = 0.0
+		for i in range(0, rounds):
+			graph = a2_q1.rand_graph(N, p)
+			startTime = time.time()
+			minTeams = find_min_teams(graph)
+			sol = make_ice_breaker_sat(graph, minTeams)
+			elapsedTime = time.time() - startTime
+
+			averageMinTeams += minTeams
+			averageRunningTime += elapsedTime
+			print("Min Teams for %0.1f: %d" %(p, minTeams))
+			print("Running Time: %f seconds" %(elapsedTime))
+
+		print("Average Min Teams for %0.1f: %f" %(p, averageMinTeams/rounds))
+		print("Average Running Time for %0.1f: %f" %(p, averageRunningTime/rounds))
 
 """
 graphs = []

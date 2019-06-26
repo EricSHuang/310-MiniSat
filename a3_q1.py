@@ -4,6 +4,7 @@ Eric Huang
 """
 import math
 import os
+import time
 
 def make_queen_sat(N):
 	"""Generates a SAT sentence for the N-Queens problem that can be inputted into miniSAT."""
@@ -147,13 +148,36 @@ def draw_queen_sat_sol(sol):
 			print(line)
 		return
 
+#Seee if it should be incorporated into experiment() instead of being a helper function
+def writeToFile(string, fileName):
+	"""Writes given string to file."""
+	file = open(fileName, "w")
+	file.write(string)
+	file.close()
 
+#TODO: Check for correctness
+def experiment():
+	"""Determines the max value for N that minisat can solve in 10seconds or less"""
+	solvableInTime = True
+	N = 0
+	while(solvableInTime):
+		queenSAT = make_queen_sat(N)
+		writeToFile(queenSAT, "queenSAT.txt")
+		startTime = time.time()
+		os.system('minisat queenSAT.txt out')
+		elapsedTime = time.time() - startTime
+
+		if (elapsedTime > 10):
+			solvableInTime = False
+			print("MAX N: %d" %(N))
+			return N
+		else: N += 1
+
+
+experiment()
+"""
 #Testing
-make_queen_sat(4)
-#testSol = "SAT -1 -2 3 -4 5 -6 -7 -8 -9 -10 -11 12 -13 14 -15 -16 0"
-#draw_queen_sat_sol(testSol)
-
-
-"""Determines the max value for N that minisat can solve in 10seconds or less"""
-#TODO: FINISH THIS SECTION
-#os.system('minisat')
+#make_queen_sat(4)
+testSol = "SAT -1 -2 3 -4 5 -6 -7 -8 -9 -10 -11 12 -13 14 -15 -16 0"
+draw_queen_sat_sol(testSol)
+"""
