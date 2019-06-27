@@ -148,14 +148,14 @@ def draw_queen_sat_sol(sol):
 			print(line)
 		return
 
-#Seee if it should be incorporated into experiment() instead of being a helper function
+
 def writeToFile(string, fileName):
 	"""Writes given string to file."""
 	file = open(fileName, "w")
 	file.write(string)
 	file.close()
 
-#TODO: Check for correctness
+
 def experiment():
 	"""Determines the max value for N that minisat can solve in 10seconds or less"""
 	solvableInTime = True
@@ -170,16 +170,20 @@ def experiment():
 
 		if (elapsedTime > 10):
 			solvableInTime = False
-			print(runningTimes)
-			#print("MAX N: %d" %(N))
+			"""
+			#Print out the running time for each n
+			for i in range(1, N+1):
+				print("N = %d running time: %0.6f" %(i, runningTimes[i]))
+			print("MAX N: %d" %(N))
+			"""
 			return N
-		else: 
+		else:
 			runningTimes.append(elapsedTime)
 			N += 1
 
 
 maxN = experiment()
-print("MAX N: %d" %(maxN))
+
 """
 #Testing
 #make_queen_sat(4)

@@ -1,7 +1,10 @@
-#TODO: figure out if i need this line later
-import a2_q1	#for rand_graph()
+"""
+CMPT310: a3_q2.py
+Eric Huang
+"""
 import os
 import time
+import a2_q1	#for rand_graph()
 
 def make_ice_breaker_sat(graph, k):
 	"""Returns a SAT sentence for the k-Graph Colouring problem that can be inputted into minisat.
@@ -62,14 +65,14 @@ def make_ice_breaker_sat(graph, k):
 	#print(sentence)
 	return sentence
 
-#See if it should be incorporated into find_min_teams() instead of being a helper function
+
 def writeToFile(string, fileName):
 	"""Writes given string to file."""
 	file = open(fileName, "w")
 	file.write(string)
 	file.close()
 
-#TODO: Check this for correctness
+
 def find_min_teams(graph):
 	"""Uses minisat to find the exact min number of colours needed to colour the graph."""
 	k = 1
@@ -80,16 +83,13 @@ def find_min_teams(graph):
 		os.system("minisat min_teams.txt out2")
 		file = open("out2", "r")
 
-		stLine = file.readline()
-		#print("firstline: %s" %(stLine))
-
-		if ( stLine == "UNSAT\n"):
+		if (file.readline() == "UNSAT\n"):
 			k += 1
 		else:
 			unsolved = False
 			return k
 
-#TODO: Check this for correctness
+
 def experiment():
 	"""Prints out average solving time and average number of teams."""
 	N = 20
@@ -115,8 +115,10 @@ def experiment():
 		print("Average Min Teams for %0.1f: %f" %(p, averageMinTeams/rounds))
 		print("Average Running Time for %0.1f: %f" %(p, averageRunningTime/rounds))
 
+experiment()
 
-#Testing make_ice_breaker_sat()
+"""
+#---Testing make_ice_breaker_sat()---#
 #g1 = {0: [1, 2], 1: [0], 2: [0], 3: []}
 #make_ice_breaker_sat(g1, 3)
 
@@ -131,9 +133,7 @@ k4 = {0: [1, 2, 3], 1: [0, 2, 3], 2: [0, 1, 3], 3: [0, 1, 2]}
 #writeToFile(k3sat, "k3sat.txt")
 #os.system("minisat k3sat.txt k3satOUT")
 
-#Testing find_min_teams()
+#---Testing find_min_teams()---#
 #print("min teams for k3: %d" %(find_min_teams(k3)))
 #print("min teams for k4: %d" %(find_min_teams(k4)))
-
-
-experiment()
+"""
